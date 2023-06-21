@@ -25,6 +25,7 @@ Have a custom dataset? You can customize Label Studio to fit your needs. Read an
 ### Build the new Frontend
 As in the label-studio-frontend repo already explained, you should first of all create a new build from its source by running following:
 ```
+set NODE_ENV=production
 set BUILD_MODULE=true
 set BUILD_NO_HASH=true 
 set BUILD_NO_CHUNKS=true
