@@ -21,6 +21,45 @@ Label Studio is an open source data labeling tool. It lets you label data types 
 
 Have a custom dataset? You can customize Label Studio to fit your needs. Read an [introductory blog post](https://towardsdatascience.com/introducing-label-studio-a-swiss-army-knife-of-data-labeling-140c1be92881) to learn more. 
 
+## Inserting your custom LS-Frontend build and run all as a docker instance
+### Build the new Frontend
+As in the label-studio-frontend repo already explained, you should first of all create a new build from its source by running following:
+```
+set BUILD_MODULE=true
+set BUILD_NO_HASH=true 
+set BUILD_NO_CHUNKS=true
+
+yarn run build
+```
+Afterwards you should copy these files and insert them into this dist/folder:
+
+1. In the label-studio repo go to `label_studio\frontend\dist\lsf` and delete the folders `css` and `js`. 
+1. In the label-studio-frontend repo go to `build\static` and copy the folders `css` and `js`.
+1. Paste these folders into `label_studio\frontend\dist\lsf` in the label-studio repo.
+
+### Start the docker container
+Now you are able to build a new docker image, that contains the new frontend instance. For that do following:
+
+Firstly build the new docker image (you can change the name to anything you like)
+```
+docker build -t label-studio .
+``` 
+Then run a container, map its ports to 8080 and tell him to use ```/docker_mount``` as the directory to store its backend data (fileupload and SQLite database). You can change this directory to anyone you like.
+```
+docker run -it -p 8080:8080 -v %cd%/docker_mount:/label-studio/data label-studio:latest label-studio --log-level DEBUG
+```
+
+Now you should be able to access the Application by opening http://localhost:8080/ in your browser.
+
+The next time you want to start this instance, you can just run the container again. To find all your existing containers, one could open Docker Desktop GUI, or simply type the command 
+```
+docker ps --all
+```
+choose the correct container instance and run 
+```
+docker start <container_id_or_name>
+```
+
 ## Try out Label Studio
 
 Install Label Studio locally, or deploy it in a cloud instance. [Or, sign up for a free trial of our Enterprise edition.](https://heartex.com/free-trial).
